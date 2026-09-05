@@ -87,3 +87,17 @@ class LoginResponse(BaseModel):
     ok: bool
     operator_id: str
     token: str
+
+class AssistantChatRequest(BaseModel):
+    message: str
+
+
+class AssistantChatResponse(BaseModel):
+    reply: str
+
+class AssistantChatRequest(BaseModel):
+    message: str
+
+
+class AssistantChatResponse(BaseModel):
+    reply: str

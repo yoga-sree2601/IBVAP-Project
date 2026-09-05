@@ -1,10 +1,19 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 
-class NightDetectionScreen extends StatelessWidget {
+class NightDetectionScreen extends StatefulWidget {
   const NightDetectionScreen({super.key});
+
+  @override
+  State<NightDetectionScreen> createState() => _NightDetectionScreenState();
+}
+
+class _NightDetectionScreenState extends State<NightDetectionScreen> {
+  bool _autoThermal = true;
+  bool _infrared = true;
+  bool _motionOnly = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +29,7 @@ class NightDetectionScreen extends StatelessWidget {
               Positioned(top: 12, left: 12, child: _tag(context, 'NIGHT MODE // AUTO', c.teal, c)),
               Positioned(top: 12, right: 12, child: _tag(context, 'IR ILLUMINATION: ON', c.amber, c)),
               Positioned(bottom: 12, left: 12, child: _tag(context, 'TARGETS ACQUIRED: 3', c.teal, c)),
-              Positioned(bottom: 12, right: 12, child: _tag(context, 'TEMP: -15°C', c.teal, c)),
+              Positioned(bottom: 12, right: 12, child: _tag(context, 'TEMP: -15Â°C', c.teal, c)),
             ]),
           ),
         ),
@@ -39,9 +48,9 @@ class NightDetectionScreen extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Night Detection Settings', style: AppFonts.display(context, size: 14, w: FontWeight.w600, color: c.text)),
             const SizedBox(height: 8),
-            _row(context, c, 'Auto Thermal Switch', 'Switch feeds to thermal optics after dusk', true),
-            _row(context, c, 'Infrared Illuminators', 'Trigger IR floodlights on movement', true),
-            _row(context, c, 'Motion-only Recording', 'Store footage only when movement detected', false),
+            _row(context, c, 'Auto Thermal Switch', 'Switch feeds to thermal optics after dusk', _autoThermal, (v) => setState(() => _autoThermal = v)),
+            _row(context, c, 'Infrared Illuminators', 'Trigger IR floodlights on movement', _infrared, (v) => setState(() => _infrared = v)),
+            _row(context, c, 'Motion-only Recording', 'Store footage only when movement detected', _motionOnly, (v) => setState(() => _motionOnly = v)),
           ]),
         ),
       ]),
@@ -64,7 +73,7 @@ class NightDetectionScreen extends StatelessWidget {
         ]),
       );
 
-  Widget _row(BuildContext context, AppColors c, String title, String desc, bool value) => Padding(
+  Widget _row(BuildContext context, AppColors c, String title, String desc, bool value, ValueChanged<bool> onChanged) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(children: [
           Expanded(
@@ -73,7 +82,7 @@ class NightDetectionScreen extends StatelessWidget {
               Text(desc, style: AppFonts.body(context, size: 11.5, color: c.textDim)),
             ]),
           ),
-          Switch(value: value, activeColor: c.teal, onChanged: (_) {}),
+          Switch(value: value, activeColor: c.teal, onChanged: onChanged),
         ]),
       );
 }

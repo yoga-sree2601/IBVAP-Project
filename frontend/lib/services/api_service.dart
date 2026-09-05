@@ -126,4 +126,16 @@ class ApiService {
     final res = await http.patch(_u('/fence/settings'), headers: _headers, body: jsonEncode(body));
     return await _handle(res) as Map<String, dynamic>;
   }
+
+  // ------------------------------------------------------------- ASSISTANT
+  Future<String> assistantChat(String message) async {
+    final res = await http.post(
+      _u('/assistant/chat'),
+      headers: _headers,
+      body: jsonEncode({'message': message}),
+    );
+    final data = await _handle(res) as Map<String, dynamic>;
+    return data['reply'] as String;
+  }
 }
+

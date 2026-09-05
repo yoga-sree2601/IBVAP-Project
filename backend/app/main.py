@@ -15,7 +15,7 @@ with SessionLocal() as _db:
 
 app = FastAPI(title="IBVAP API", version="1.0.0")
 
-# Wide-open CORS — this is a hackathon/demo backend, tighten before any real deployment.
+# Wide-open CORS - this is a hackathon/demo backend, tighten before any real deployment.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,8 +35,6 @@ def root():
 # ---------------------------------------------------------------- AUTH -----
 @app.post("/auth/login", response_model=schemas.LoginResponse)
 def login(payload: schemas.LoginRequest):
-    # Demo auth — any non-empty operator id / passcode is accepted.
-    # Swap this for real credential checks before production use.
     if not payload.operator_id or not payload.passcode:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return schemas.LoginResponse(ok=True, operator_id=payload.operator_id, token=secrets.token_hex(16))
@@ -170,3 +168,38 @@ def update_fence_settings(payload: schemas.FenceSettingsUpdate, db: Session = De
     db.commit()
     db.refresh(settings)
     return settings
+
+
+@app.post("/assistant/chat", response_model=schemas.AssistantChatResponse)
+def assistant_chat(payload: schemas.AssistantChatRequest, db: Session = Depends(get_db)):
+    msg = payload.message.lower().strip()
+    cameras_count = db.query(models.Camera).count()
+    online_cameras = db.query(models.Camera).filter(models.Camera.status == "Online").count()
+    alerts = db.query(models.Alert).order_by(models.Alert.id.desc()).all()
+    alerts_count = len(alerts)
+    zones = db.query(models.FenceZone).all()
+    zones_count = len(zones)
+    elevated_zones = len([z for z in zones if str(getattr(z, "status", "")).lower() == "amber"])
+
+    if any(w in msg for w in ["hello", "hi", "hey"]):
+        reply = "Hello Operator. I am IBVAP Assistant, online and ready to help. Ask me about cameras, alerts, or the perimeter fence."
+    elif "camera" in msg:
+        reply = f"There are {cameras_count} registered camera nodes, {online_cameras} currently online."
+    elif "alert" in msg:
+        if alerts_count == 0:
+            reply = "No alerts have been logged yet. All sectors are quiet."
+        else:
+            latest = alerts[0]
+            reply = f"There are {alerts_count} alerts on record. Most recent: '{latest.title}' ({latest.severity})."
+    elif "fence" in msg or "zone" in msg:
+        reply = f"The virtual fence has {zones_count} zones configured, {elevated_zones} at elevated status."
+    elif "status" in msg or "system" in msg:
+        reply = f"System status: {online_cameras}/{cameras_count} cameras online, {alerts_count} alerts logged, {elevated_zones} zones elevated. All systems nominal."
+    elif "help" in msg:
+        reply = "I can answer questions about cameras, alerts, fence zones, or overall system status. Try asking how many alerts today or fence status."
+    elif "thank" in msg:
+        reply = "You are welcome, Operator. Stay vigilant."
+    else:
+        reply = "I am still learning. I can currently help with camera counts, alert summaries, and fence zone status. Try asking about one of those."
+
+    return schemas.AssistantChatResponse(reply=reply)

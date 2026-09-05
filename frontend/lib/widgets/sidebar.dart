@@ -16,10 +16,13 @@ const navEntries = [
   NavEntry('map', 'Sector Map', Icons.map_outlined, 'MONITORING'),
   NavEntry('anpr', 'ANPR', Icons.directions_car_filled_outlined, 'DETECTION'),
   NavEntry('night', 'Night Detection', Icons.nightlight_round, 'DETECTION'),
+  NavEntry('face', 'Face Detection', Icons.face_outlined, 'DETECTION'),
+  NavEntry('suspicious', 'Suspicious Activity', Icons.visibility_outlined, 'DETECTION'),
   NavEntry('fence', 'Virtual Fence', Icons.fence_outlined, 'DETECTION'),
   NavEntry('alerts', 'Alerts', Icons.warning_amber_rounded, 'INTELLIGENCE', badge: 3),
   NavEntry('analytics', 'Analytics', Icons.bar_chart_rounded, 'INTELLIGENCE'),
   NavEntry('settings', 'Settings', Icons.settings_outlined, 'SYSTEM'),
+  NavEntry('assistant', 'AI Assistant', Icons.smart_toy_outlined, 'SYSTEM'),
 ];
 
 class Sidebar extends StatelessWidget {

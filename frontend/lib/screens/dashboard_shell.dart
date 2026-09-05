@@ -8,11 +8,14 @@ import 'cameras_screen.dart';
 import 'map_screen.dart';
 import 'anpr_screen.dart';
 import 'night_detection_screen.dart';
+import 'face_detection_screen.dart';
+import 'suspicious_activity_screen.dart';
 import 'fence_screen.dart';
 import 'alerts_screen.dart';
 import 'analytics_screen.dart';
 import 'settings_screen.dart';
 import 'login_screen.dart';
+import 'assistant_screen.dart';
 
 class DashboardShell extends StatefulWidget {
   final String operatorId;
@@ -33,10 +36,13 @@ class _DashboardShellState extends State<DashboardShell> {
     'map': ['Sector Map', 'REAL-TIME PERIMETER VIEW'],
     'anpr': ['ANPR', 'AUTOMATIC NUMBER PLATE RECOGNITION'],
     'night': ['Night Detection', 'LOW-LIGHT & THERMAL MOVEMENT'],
+    'face': ['Face Detection', 'FACIAL RECOGNITION // WATCHLIST MATCHING'],
+    'suspicious': ['Suspicious Activity', 'BEHAVIOR PATTERN ANALYSIS'],
     'fence': ['Virtual Fence', 'PERIMETER INTRUSION BOUNDARIES'],
     'alerts': ['Alert History', 'SYSTEM-WIDE TACTICAL LOG'],
     'analytics': ['Intelligence Analytics', '30-DAY ROLLUP'],
     'settings': ['System Settings', 'PLATFORM CONFIGURATION'],
+    'assistant': ['AI Assistant', 'IBVAP INTELLIGENT HELP DESK'],
   };
 
   static const navIcons = {
@@ -45,10 +51,13 @@ class _DashboardShellState extends State<DashboardShell> {
     'map': Icons.map_outlined,
     'anpr': Icons.badge_outlined,
     'night': Icons.nightlight_outlined,
+    'face': Icons.face_outlined,
+    'suspicious': Icons.visibility_outlined,
     'fence': Icons.fence_outlined,
     'alerts': Icons.warning_amber_outlined,
     'analytics': Icons.analytics_outlined,
     'settings': Icons.settings_outlined,
+    'assistant': Icons.smart_toy_outlined,
   };
 
   Widget _buildPage(String key) {
@@ -63,6 +72,10 @@ class _DashboardShellState extends State<DashboardShell> {
         return const AnprScreen();
       case 'night':
         return const NightDetectionScreen();
+      case 'face':
+        return const FaceDetectionScreen();
+      case 'suspicious':
+        return const SuspiciousActivityScreen();
       case 'fence':
         return const FenceScreen();
       case 'alerts':
@@ -71,6 +84,8 @@ class _DashboardShellState extends State<DashboardShell> {
         return const AnalyticsScreen();
       case 'settings':
         return const SettingsScreen();
+      case 'assistant':
+        return const AssistantScreen();
       default:
         return const SizedBox();
     }
@@ -347,3 +362,8 @@ void _showProfileMenu(BuildContext context, AppColors c, String operatorId, Stri
     ),
   );
 }
+
+
+
+
+
